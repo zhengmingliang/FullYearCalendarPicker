@@ -1,0 +1,57 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery 十二个月平铺式日历模板插件</title>
+<link rel="stylesheet" type="text/css" href="./css/datePicker.css" />
+<style>
+#div1 {
+	min-width: 670px;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<h2>十二个月平铺式日历模板插件</h2>
+<div id="div1"></div>
+<p style="color:red;">请您尝试选中某个日期出现红色闪烁框后，点击键盘上下左右键来快速选择日期</p>
+<input type="button" value="获取日历当前选中值" />
+<input type="button" value="获取日历所有选中值" />
+<input type="button" value="更新日历值" />
+<input type="button" value="清除日历所有选中信息" />
+<input type="button" value="设置为指定年份" />
+<input type="button" value="设置为指定星期不可选" />
+<p>当前选中日期集合：<span id="a"></span></p>
+<p>当前选中日期：<span id="b"></span></p>
+<script src="js/fullYearPicker.js"></script>
+<script>
+    //$("[date='2019-11-2']").addClass("selected")
+    //示例
+    let year = new Date().getFullYear()
+    $('#div1').fullYearPicker({
+        disable:false,//只读
+        year:year,//指定年份
+        initDate:["2021-07-20","2021-07-21","2021-07-22","2021-07-23"],//初始化选中日期
+        yearScale: { min: 2010, max: 2100 },//初始化日历范围
+        format:"YYYY-MM-DD",//日期格式化  YYYY-MM-DD  YYYY-M-D
+        cellClick: function (dateStr, isDisabled,isSelected) {//当前选中日期回调函数
+            $("#b").text(dateStr + ",不可用："+ isDisabled+",选中："+isSelected);
+        },
+        choose:function (a) {//实时获取所有选中的日期的回调函数
+           $("#a").text(JSON.stringify(a));
+        }
+    });
+    $('input').click(function () {
+        switch (this.value) {
+            case '获取日历当前选中值': alert($('#div1').fullYearPicker('getSelected')); break;
+            case '获取日历所有选中值': alert($('#div1').fullYearPicker('getAll')); break;
+            case '清除日历所有选中信息': alert($('#div1').fullYearPicker('clear')); break;
+            case '更新日历值': $('#div1').fullYearPicker('acceptChange'); alert('更新值成功，切换年份查看效果'); break;
+            case '设置为指定年份': var year = prompt('请输入4位年份数字'); if (/^\d{4}$/.test(year)) $('#div1').fullYearPicker('setYear', parseInt(year)); else alert('年份为4位数字！'); break;
+            case '设置为指定星期不可选': var day = prompt('请输入0~6的数字，不输入则设置所有星期可选'); if (/^[0-6]*$/.test(day)) $('#div1').fullYearPicker('setDisabledDay', day); else alert('请输入0~6的数字！');
+        }
+    });
+</script>
+</body>
+</html>
